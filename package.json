@@ -8,7 +8,8 @@
     "scripts": {
         "build": "tsup",
         "build:watch": "tsup --watch",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "clean": "rimraf bin",
+        "release": "pnpm build && auto shipit"
     },
     "keywords": [],
     "author": {
@@ -19,7 +20,9 @@
     "dependencies": {
         "@storybook/cli": "^7.3.2",
         "@storybook/core-common": "^7.3.2",
-        "@storybook/csf-tools": "^7.3.2"
+        "@storybook/csf-tools": "^7.3.2",
+        "auto": "^11.0.1",
+        "rimraf": "^5.0.1"
     },
     "devDependencies": {
         "@types/node": "16",
