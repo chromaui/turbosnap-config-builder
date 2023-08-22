@@ -1,0 +1,36 @@
+{
+    "name": "@chromaui/turbosnap-helper",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "bin": "index.js",
+    "scripts": {
+        "build": "tsup",
+        "build:watch": "tsup -w",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": {
+        "name": "Shaun Evening",
+        "email": "shaun@chromatic.com"
+    },
+    "license": "ISC",
+    "dependencies": {
+        "@storybook/cli": "^7.3.2",
+        "@storybook/core-common": "^7.3.2",
+        "@storybook/csf-tools": "^7.3.2"
+    },
+    "devDependencies": {
+        "@types/node": "16",
+        "@types/prompts": "^2.4.4",
+        "boxen": "^7.1.1",
+        "chalk": "^5.3.0",
+        "dedent": "^1.5.1",
+        "fast-glob": "^3.3.1",
+        "prettier": "^3.0.2",
+        "prompts": "^2.4.2",
+        "read-pkg-up": "^10.0.0",
+        "tsup": "^7.2.0",
+        "typescript": "^5.1.6"
+    }
+}
