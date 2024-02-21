@@ -11,4 +11,5 @@ module.exports = {
     ],
     prereleaseBranches: ['next', 'prerelease'],
     versionBranches: true,
+    onlyPublishWithReleaseLabel: true,
 };
