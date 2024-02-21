@@ -3,7 +3,7 @@
     "publishConfig": {
         "access": "public"
     },
-    "version": "0.1.13--canary.b05913d.0",
+    "version": "0.1.13--canary.a4c84b5.0",
     "description": "",
     "private": false,
     "main": "index.js",
