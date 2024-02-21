@@ -10,6 +10,4 @@ module.exports = {
         { releaseType: 'patch', name: 'path' },
     ],
     prereleaseBranches: ['next', 'prerelease'],
-    versionBranches: true,
-    onlyPublishWithReleaseLabel: true,
 };
