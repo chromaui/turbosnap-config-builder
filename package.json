@@ -1,6 +1,6 @@
 {
-    "name": "@chromaui/turbosnap-helper",
-    "version": "0.0.1",
+    "name": "@chromatic-com/turbosnap-helper",
+    "version": "0.02",
     "description": "",
     "private": false,
     "main": "index.js",
