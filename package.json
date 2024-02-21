@@ -3,11 +3,13 @@
     "publishConfig": {
         "access": "public"
     },
-    "version": "0.1.13--canary.6933b15.0",
+    "version": "0.1.13--canary.19e5158.0",
     "description": "",
     "private": false,
     "main": "index.js",
-    "bin": "index.js",
+    "bin": {
+        "turbosnap-helper": "index.js"
+    },
     "scripts": {
         "build": "tsup",
         "build:watch": "tsup --watch",
