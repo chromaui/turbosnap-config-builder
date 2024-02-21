@@ -1,6 +1,9 @@
 {
     "name": "@chromatic-com/turbosnap-helper",
-    "version": "0.1.2",
+    "publishConfig": {
+        "access": "public"
+    },
+    "version": "0.1.10",
     "description": "",
     "private": false,
     "main": "index.js",
@@ -13,15 +16,15 @@
     },
     "keywords": [],
     "author": {
-        "name": "Shaun Evening",
-        "email": "shaun@chromatic.com"
+        "name": "Reuben Ellis",
+        "email": "reuben@chromatic.com"
     },
     "license": "ISC",
     "dependencies": {
         "@storybook/cli": "^7.3.2",
         "@storybook/core-common": "^7.3.2",
         "@storybook/csf-tools": "^7.3.2",
-        "auto": "^11.0.1",
+        "auto": "^11.0.4",
         "rimraf": "^5.0.1"
     },
     "devDependencies": {
