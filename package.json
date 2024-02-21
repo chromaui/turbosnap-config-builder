@@ -1,6 +1,6 @@
 {
     "name": "@chromatic-com/turbosnap-helper",
-    "version": "0.0.2",
+    "version": "0.1.5",
     "description": "",
     "private": false,
     "main": "index.js",
@@ -13,8 +13,8 @@
     },
     "keywords": [],
     "author": {
-        "name": "Shaun Evening",
-        "email": "shaun@chromatic.com"
+        "name": "Reuben Ellis",
+        "email": "reuben@chromatic.com"
     },
     "license": "ISC",
     "dependencies": {
