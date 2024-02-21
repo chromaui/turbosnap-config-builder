@@ -1,6 +1,6 @@
 {
     "name": "@chromatic-com/turbosnap-helper",
-    "version": "0.1.0",
+    "version": "0.1.2",
     "description": "",
     "private": false,
     "main": "index.js",
