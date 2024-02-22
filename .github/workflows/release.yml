@@ -21,7 +21,7 @@ jobs:
               name: Install pnpm
               with:
                   version: 8
-                  # run_install: false
+                  run_install: false
 
             # - name: Get pnpm store directory
             #   shell: bash
@@ -36,8 +36,8 @@ jobs:
             #       restore-keys: |
             #           ${{ runner.os }}-pnpm-store-
 
-            # - name: Install dependencies
-            #   run: pnpm install
+            - name: Install dependencies
+              run: pnpm install
 
             - name: Create Release
               env:
