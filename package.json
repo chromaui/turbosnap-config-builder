@@ -5,8 +5,11 @@
     },
     "version": "0.1.13--canary.a4c84b5.0",
     "description": "",
-    "private": false,
     "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/chromaui/turbosnap-helper.git"
+    },
     "bin": {
         "turbosnap-helper": "index.js"
     },
