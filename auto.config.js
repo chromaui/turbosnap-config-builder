@@ -6,6 +6,5 @@ module.exports = {
             releaseType: 'none',
         },
     ],
-    prereleaseBranches: ['next', 'prerelease'],
     versionBranches: true,
 };
