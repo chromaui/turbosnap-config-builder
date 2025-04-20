@@ -6,7 +6,7 @@
         "experimentalDecorators": true,
         "incremental": false,
         "isolatedModules": true,
-        "lib": ["es2020"],
+        "lib": ["es2020", "dom"],
         "module": "commonjs",
         "noImplicitAny": true,
         "rootDir": "./src",
