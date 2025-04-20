@@ -36,7 +36,7 @@ const getStorybookConfigPath = async (): Promise<string> => {
                 '.storybook',
             )} directories. Please select which Storybook you'd like help with. `,
             {
-                title: '💬 I need your help!',
+                title: '💬 I need your help!!!',
                 padding: 1,
                 borderStyle: 'double',
                 borderColor: 'yellow',
