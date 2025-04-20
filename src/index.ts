@@ -98,6 +98,7 @@ interface ChromaticConfig {
     storybookConfigDir?: string;
     storybookBuildDir?: string;
     externals?: string[];
+    onlyChanged?: boolean;
     [key: string]: any;
 }
 
@@ -486,6 +487,7 @@ const createChromaticConfig = async (meta: ProjectMeta) => {
         storybookBaseDir: meta.storybookBaseDir,
         storybookConfigDir: meta.storybookConfigDir,
         storybookBuildDir: meta.storybookBuildDir,
+        onlyChanged: true
     };
 
     // Ask about adding static assets to externals
@@ -718,6 +720,7 @@ const updateChromaticConfig = async (configPath: string, existingConfig: Chromat
         storybookBaseDir: meta.storybookBaseDir,
         storybookConfigDir: meta.storybookConfigDir,
         storybookBuildDir: meta.storybookBuildDir,
+        onlyChanged: existingConfig.onlyChanged ?? true
     };
 
     // Ask about updating externals if static assets are found
