@@ -4,8 +4,6 @@ import { prompt } from 'prompts';
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
-import boxen from 'boxen';
-import dedent from 'dedent';
 import { glob } from 'fast-glob';
 
 /**
@@ -88,16 +86,13 @@ export const createChromaticConfig = async (meta: ProjectMeta): Promise<ConfigRe
 
     const configPath = path.join(meta.storybookBaseDir, 'chromatic.config.json');
     let projectId = '';
-    let existingExternals: string[] = [];
+    let existingConfig: ChromaticConfig = {};
 
     // Check if config file already exists
     if (fs.existsSync(configPath)) {
-        const existingConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+        existingConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
         if (existingConfig.projectId) {
             projectId = existingConfig.projectId.replace('Project:', '');
-        }
-        if (existingConfig.externals) {
-            existingExternals = existingConfig.externals;
         }
     }
 
@@ -115,14 +110,17 @@ export const createChromaticConfig = async (meta: ProjectMeta): Promise<ConfigRe
         projectId = newProjectId;
     }
 
+    // Create new config preserving all existing properties
+    // Needed to spread to new config as well in order for properties to prevserve for existing config
+    // TODO: investigate how to best clean this up
     const config: ChromaticConfig = {
+        ...existingConfig,
         $schema: 'https://www.chromatic.com/config-file.schema.json',
         projectId: `Project:${projectId}`,
         storybookBaseDir: meta.storybookBaseDir,
         storybookConfigDir: meta.storybookConfigDir,
         storybookBuildDir: meta.storybookBuildDir,
         onlyChanged: true,
-        externals: existingExternals, // Preserve existing externals
     };
 
     // Write the new config immediately
@@ -144,39 +142,23 @@ export const updateChromaticConfig = async (
         { title: '📝 Updating Chromatic Config', borderColor: 'magenta' }
     );
 
-    // Create a new config object that preserves all existing properties
-    // TODO: currently, spreading is not properly working and some properties are not being preserved
-    const updatedConfig = {
-        // Explicitly preserve all existing properties
-        ...Object.fromEntries(
-            Object.entries(existingConfig).filter(([key]) => 
-                !['storybookBaseDir', 'storybookConfigDir', 'storybookBuildDir'].includes(key)
-            )
-        ),
-        // Update only the Storybook paths
+    // Create a new config object by explicitly copying all properties
+    const updatedConfig: ChromaticConfig = {
+        // Add any other properties from the existing config
+        ...existingConfig,
+        // Copy all existing properties
+        $schema: existingConfig.$schema || 'https://www.chromatic.com/config-file.schema.json',
+        projectId: existingConfig.projectId,
+        onlyChanged: existingConfig.onlyChanged,
+        externals: existingConfig.externals,
+        // Update the Storybook paths
         storybookBaseDir: meta.storybookBaseDir,
         storybookConfigDir: meta.storybookConfigDir,
         storybookBuildDir: meta.storybookBuildDir,
-    } as ChromaticConfig;
-
-    // Add schema if it doesn't exist
-    if (!updatedConfig.$schema) {
-        updatedConfig.$schema = 'https://www.chromatic.com/config-file.schema.json';
-    }
+    };
 
     // Write the updated config immediately
     fs.writeFileSync(configPath, JSON.stringify(updatedConfig, null, 2));
-
-    // Verify all options are preserved
-    const originalKeys = Object.keys(existingConfig);
-    const updatedKeys = Object.keys(updatedConfig);
-    const missingKeys = originalKeys.filter(key => !updatedKeys.includes(key));
-    if (missingKeys.length > 0) {
-        displayMessage(
-            `Warning: Some configuration options were not preserved:\n${missingKeys.map(k => `  - ${k}`).join('\n')}`,
-            { title: '⚠️ Config Warning', borderColor: 'yellow' }
-        );
-    }
 
     displayMessage(
         `Updated Chromatic config with new Storybook paths:\n` +
