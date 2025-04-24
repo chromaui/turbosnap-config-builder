@@ -14,7 +14,7 @@ export const updatePackageJsonScript = async (configPath: string, meta: ProjectM
     if (!fs.existsSync(packageJsonPath)) {
         displayMessage(
             'No package.json found in the project directory.',
-            { title: '⚠️ Warning', borderColor: 'yellow' }
+            { title: '🚨 Warning', borderColor: 'yellow' }
         );
         return null;
     }
@@ -46,6 +46,7 @@ export const updatePackageJsonScript = async (configPath: string, meta: ProjectM
                 hasChanges = true;
             } else {
                 // Script has config file flag - display current and suggested values
+                // TODO: See if we can get the path to update successfully
                 const currentConfigPath = script.match(/--config-file\s+'([^']+)'/)?.[1];
                 displayMessage(
                     dedent`Current script "${name}":
@@ -55,7 +56,7 @@ export const updatePackageJsonScript = async (configPath: string, meta: ProjectM
                     ${chalk.green(configFlag)}
                     
                     ${currentConfigPath !== relativeConfigPath ? 
-                        chalk.yellow('⚠️ The config file paths are different. You may want to update your script.') : 
+                        chalk.yellow('🚨 The config file paths are different. You may want to update your script.') : 
                         chalk.green('✅ The config file paths match.')}`,
                     { title: '📝 Script Details', borderColor: 'blue' }
                 );

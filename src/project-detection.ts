@@ -19,7 +19,7 @@ export const getStorybookConfigPath = async (): Promise<string> => {
     if (storybookDirectories.length === 0) {
         displayMessage(
             'No Storybook configuration directories found. Please ensure you are in a Storybook project directory.',
-            { title: '⚠️ No Storybook Config Found', borderColor: 'yellow' }
+            { title: '❌ No Storybook Config Found', borderColor: 'yellow' }
         );
         process.exit(1);
     }
@@ -59,12 +59,17 @@ export const buildProjectMeta = async (
     configDir: string,
     ciEnv: string,
 ): Promise<ProjectMeta> => {
-    const frameworkValue = mainConfig.getSafeFieldValue(['framework']) || 
-                          pluckFrameworkFromRawContents(mainConfig) ||
-                          mainConfig.getNameFromPath(['framework']);
+    // framework detection using three fallback methods
+    const frameworkValue = mainConfig.getSafeFieldValue(['framework']) || // looks for field named framework in main SB config
+                          pluckFrameworkFromRawContents(mainConfig) || // extracts patterns like @storybook/ from raw config contents
+                          mainConfig.getNameFromPath(['framework']); // get framework name from path structure; last resort, other two should cover
 
     const projectRoot = process.cwd();
     const storybookBaseDir = `./${configDir}`.replace('/.storybook', '');
+
+    // adding projectRoot twice to fix linter errors for staticAssets
+    const staticAssetsResult = await findStaticAssets(projectRoot, projectRoot);
+    const staticAssets = [...staticAssetsResult.projectAssets, ...staticAssetsResult.repoAssets];
 
     return {
         storybookBaseDir,
@@ -74,6 +79,6 @@ export const buildProjectMeta = async (
         isMonoRepo: packageManager.isStorybookInMonorepo(),
         framework: frameworkValue,
         ciEnv,
-        staticAssets: await findStaticAssets(projectRoot),
+        staticAssets,
     };
 }; 

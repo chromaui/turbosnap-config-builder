@@ -148,7 +148,7 @@ export const promptForStaticAssets = async (
         } else {
             displayMessage(
                 'No project-level assets found.',
-                { title: '⚠️ Warning', borderColor: 'yellow' }
+                { title: '🚨 Warning', borderColor: 'yellow' }
             );
         }
     }
@@ -161,7 +161,7 @@ export const promptForStaticAssets = async (
         } else {
             displayMessage(
                 'No repository-level assets found.',
-                { title: '⚠️ Warning', borderColor: 'yellow' }
+                { title: '🚨 Warning', borderColor: 'yellow' }
             );
         }
     }

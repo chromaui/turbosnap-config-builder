@@ -13,11 +13,26 @@ export const normalizeManagerName = (managerName: PackageManagerName) =>
 
 /**
  * Extracts framework information from Storybook main config
+ * Updated to include getAbsolutePathMatch regex
  */
 export const pluckFrameworkFromRawContents = (mainConfig: ConfigFile): string => {
     const frameworkNode = mainConfig.getFieldNode(['framework']);
     const { start, end } = frameworkNode;
     const frameworkContents = mainConfig._code.slice(start, end);
+    
+    // Try to match getAbsolutePath format
+    const getAbsolutePathMatch = frameworkContents.match(/getAbsolutePath\(['"](@storybook\/[^'"]+)['"]\)/);
+    if (getAbsolutePathMatch) {
+        return getAbsolutePathMatch[1];
+    }
+    
+    // Try to match object format with name property
+    const objectMatch = frameworkContents.match(/name['"]:\s*['"](@storybook\/[^'"]+)['"]/);
+    if (objectMatch) {
+        return objectMatch[1];
+    }
+    
+    // Fallback to direct string match
     const frameworkMatch = frameworkContents.match(/(@storybook\/[^\"]+)/);
     return frameworkMatch?.[1];
 };
@@ -34,6 +49,7 @@ export const displayMessage = (message: string, options: { title: string; border
                 padding: 1,
                 borderColor: options.borderColor,
                 borderStyle: 'double',
+                titleAlignment: 'center',
             },
         ),
     );

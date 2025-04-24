@@ -60,7 +60,7 @@ const initMode = async () => {
     if (storybookDirs.length === 0) {
         displayMessage(
             'No Storybook configuration directories found. Please ensure you are in a Storybook project directory.',
-            { title: '⚠️ No Storybook Config Found', borderColor: 'yellow' }
+            { title: '❌ No Storybook Config Found', borderColor: 'yellow' }
         );
         process.exit(1);
     }
@@ -117,6 +117,7 @@ const initMode = async () => {
         ${hasGit ? '✅ Git repository found' : '⚠️ No git repository found'}`,
             {
                 title: '📝 Here are your project details',
+                titleAlignment: 'center',
                 padding: 1,
                 borderColor: 'green',
                 borderStyle: 'double',
@@ -164,6 +165,7 @@ const initMode = async () => {
                 You can use these values in your Chromatic config file.`,
                 {
                     title: '📝 Configuration Values',
+                    titleAlignment: 'center',
                     padding: 1,
                     borderColor: 'green',
                     borderStyle: 'double',
@@ -289,7 +291,7 @@ const initMode = async () => {
             if (missingKeys.length > 0) {
                 displayMessage(
                     `Warning: Some configuration options were not preserved:\n${missingKeys.map(k => `  - ${k}`).join('\n')}`,
-                    { title: '⚠️ Config Warning', borderColor: 'yellow' }
+                    { title: '🚨 Config Warning', borderColor: 'yellow' }
                 );
             }
         }
@@ -373,7 +375,7 @@ const main = async () => {
             await previewMode();
             break;
         default:
-            displayMessage(`Unknown mode: ${mode}. Available modes: init, analyze, preview`, {
+            displayMessage(`Unknown mode: ${mode}. Available modes: init (default), analyze, preview`, {
                 title: '❌ Error',
                 borderColor: 'red'
             });
