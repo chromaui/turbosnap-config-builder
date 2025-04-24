@@ -5,7 +5,7 @@
  */
 import { JsPackageManager, JsPackageManagerFactory } from '@storybook/cli';
 import { findConfigFile } from '@storybook/core-common';
-import { ConfigFile, readConfig } from '@storybook/csf-tools';
+import { readConfig } from '@storybook/csf-tools';
 import { glob } from 'fast-glob';
 import { prompt } from 'prompts';
 import boxen from 'boxen';
@@ -13,12 +13,12 @@ import chalk from 'chalk';
 import dedent from 'dedent';
 import fs from 'fs';
 import path from 'path';
-import { ChromaticConfig, ProjectMeta } from './types';
-import { normalizeManagerName, pluckFrameworkFromRawContents, displayMessage, exitWithMessage } from './utils';
+import { ChromaticConfig } from './types';
+import { displayMessage } from './utils';
 import { findStaticAssets, promptForStaticAssets } from './static-assets';
 import { createChromaticConfig, updateChromaticConfig, findChromaticConfig } from './config-management';
 import { updatePackageJsonScript } from './package-json';
-import { getStorybookConfigPath, buildProjectMeta } from './project-detection';
+import { buildProjectMeta } from './project-detection';
 import { minimatch } from 'minimatch';
 import { analyzeMode } from './analyze-mode';
 import { previewMode } from './preview-mode';
@@ -51,7 +51,6 @@ const initMode = async () => {
     });
 
     const manager = JsPackageManagerFactory.getPackageManager() as JsPackageManager;
-    const isMonoRepo = manager.isStorybookInMonorepo();
 
     const storybookDirs = await glob('**/.storybook', { 
         onlyDirectories: true,
@@ -354,30 +353,6 @@ const initMode = async () => {
     } else {
         await handleExit();
     }
-};
-
-/**
- * Analyzes a story file for import types
- */
-const analyzeStoryFile = async (filePath: string): Promise<{ staticImports: string[]; dynamicImports: string[] }> => {
-    const content = fs.readFileSync(filePath, 'utf-8');
-    const staticImports: string[] = [];
-    const dynamicImports: string[] = [];
-
-    // Match static imports (import ... from ...)
-    const staticImportRegex = /import\s+(?:{[^}]*}|[^;]+)\s+from\s+['"]([^'"]+)['"]/g;
-    let match;
-    while ((match = staticImportRegex.exec(content)) !== null) {
-        staticImports.push(match[1]);
-    }
-
-    // Match dynamic imports (import(), require())
-    const dynamicImportRegex = /(?:import\(|require\(|await\s+import\()\s*['"]([^'"]+)['"]/g;
-    while ((match = dynamicImportRegex.exec(content)) !== null) {
-        dynamicImports.push(match[1]);
-    }
-
-    return { staticImports, dynamicImports };
 };
 
 /**

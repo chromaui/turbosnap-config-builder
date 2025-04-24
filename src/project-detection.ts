@@ -6,7 +6,6 @@ import { ProjectMeta } from './types';
 import { normalizeManagerName, pluckFrameworkFromRawContents, displayMessage, exitWithMessage } from './utils';
 import { findStaticAssets } from './static-assets';
 import chalk from 'chalk';
-import boxen from 'boxen';
 
 /**
  * Finds all Storybook configuration directories in the project
