@@ -5,13 +5,13 @@
     },
     "version": "0.3.0",
     "description": "",
-    "main": "index.js",
+    "main": "bin/index.js",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/chromaui/turbosnap-helper.git"
     },
     "bin": {
-        "turbosnap-helper": "index.js"
+        "turbosnap-helper": "bin/index.js"
     },
     "scripts": {
         "build": "tsup",
@@ -29,13 +29,19 @@
         "@storybook/cli": "^7.6.17",
         "@storybook/core-common": "^7.6.17",
         "@storybook/csf-tools": "^7.6.17",
+        "@types/glob": "^8.1.0",
         "auto": "^11.0.5",
+        "glob": "^11.0.1",
+        "minimatch": "^9.0.4",
         "rimraf": "^5.0.1"
     },
     "devDependencies": {
+        "@types/boxen": "^3.0.5",
+        "@types/dedent": "^0.7.0",
+        "@types/minimatch": "^5.1.2",
         "@types/node": "16",
         "@types/prompts": "^2.4.4",
-        "boxen": "^7.1.1",
+        "boxen": "^5.1.2",
         "chalk": "^5.3.0",
         "dedent": "^1.5.1",
         "fast-glob": "^3.3.1",
@@ -46,8 +52,8 @@
         "typescript": "^5.3.3"
     },
     "files": [
-        "*.js",
         "bin/**/*",
         "README.md"
-    ]
+    ],
+    "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee"
 }
