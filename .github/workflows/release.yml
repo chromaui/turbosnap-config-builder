@@ -36,11 +36,6 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-pnpm-store-
 
-            - name: Clean up esbuild versions
-              run: |
-              rm -rf node_modules/.pnpm/esbuild@*/node_modules/esbuild/bin
-              rm -rf node_modules/.pnpm/esbuild@*/node_modules/esbuild/vendor
-
             - name: Install dependencies
               run: pnpm install --frozen-lockfile
 
