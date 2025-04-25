@@ -1,3 +1,22 @@
+# v0.3.1 (Fri Apr 25 2025)
+
+#### 🐛 Bug Fix
+
+- fix error in esbuild versions [#5](https://github.com/chromaui/turbosnap-config-builder/pull/5) ([@ethriel3695](https://github.com/ethriel3695))
+- update lockfile after esbuild override [#4](https://github.com/chromaui/turbosnap-config-builder/pull/4) ([@repomadness](https://github.com/repomadness))
+- Update TurboSnap helper [#3](https://github.com/chromaui/turbosnap-config-builder/pull/3) ([@repomadness](https://github.com/repomadness))
+
+#### ⚠️ Pushed to `main`
+
+- bumping version ([@repomadness](https://github.com/repomadness))
+
+#### Authors: 2
+
+- Reuben Ellis ([@ethriel3695](https://github.com/ethriel3695))
+- Sukaina ([@repomadness](https://github.com/repomadness))
+
+---
+
 # v0.3.0 (Thu Feb 22 2024)
 
 #### 🚀 Enhancement
