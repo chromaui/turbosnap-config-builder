@@ -42,7 +42,7 @@ jobs:
                   rm -rf node_modules/.pnpm/esbuild@*/node_modules/esbuild/vendor
 
             - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+              run: pnpm install
 
             - name: Create Release
               env:
