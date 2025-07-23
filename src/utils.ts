@@ -1,5 +1,5 @@
-import { PackageManagerName } from '@storybook/cli';
-import { ConfigFile } from '@storybook/csf-tools';
+import { PackageManagerName } from 'storybook/internal/common';
+import { ConfigFile } from 'storybook/internal/csf-tools';
 import boxen from 'boxen';
 import chalk from 'chalk';
 import dedent from 'dedent';
@@ -19,19 +19,19 @@ export const pluckFrameworkFromRawContents = (mainConfig: ConfigFile): string =>
     const frameworkNode = mainConfig.getFieldNode(['framework']);
     const { start, end } = frameworkNode;
     const frameworkContents = mainConfig._code.slice(start, end);
-    
+
     // Try to match getAbsolutePath format
     const getAbsolutePathMatch = frameworkContents.match(/getAbsolutePath\(['"](@storybook\/[^'"]+)['"]\)/);
     if (getAbsolutePathMatch) {
         return getAbsolutePathMatch[1];
     }
-    
+
     // Try to match object format with name property
     const objectMatch = frameworkContents.match(/name['"]:\s*['"](@storybook\/[^'"]+)['"]/);
     if (objectMatch) {
         return objectMatch[1];
     }
-    
+
     // Fallback to direct string match
     const frameworkMatch = frameworkContents.match(/(@storybook\/[^\"]+)/);
     return frameworkMatch?.[1];
@@ -40,18 +40,18 @@ export const pluckFrameworkFromRawContents = (mainConfig: ConfigFile): string =>
 /**
  * Displays a message in a box with consistent styling
  */
-export const displayMessage = (message: string, options: { title: string; borderColor?: string } = { title: '', borderColor: 'blue' }) => {
+export const displayMessage = (
+    message: string,
+    options: { title: string; borderColor?: string } = { title: '', borderColor: 'blue' },
+) => {
     console.log(
-        boxen(
-            message,
-            {
-                title: options.title,
-                padding: 1,
-                borderColor: options.borderColor,
-                borderStyle: 'double',
-                titleAlignment: 'center',
-            },
-        ),
+        boxen(message, {
+            title: options.title,
+            padding: 1,
+            borderColor: options.borderColor,
+            borderStyle: 'double',
+            titleAlignment: 'center',
+        }),
     );
     console.log('\n');
 };
@@ -79,4 +79,4 @@ export const displayProjectMeta = (meta: ProjectMeta) => {
             borderColor: 'green',
         },
     );
-}; 
+};
