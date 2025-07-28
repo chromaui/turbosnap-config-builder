@@ -34,6 +34,7 @@ export const updatePackageJsonScript = async (configPath: string, meta: ProjectM
         );
 
         let hasChanges = false;
+        let needsUpdate = false;
 
         // Check each script for config file flag
         for (const [name, script] of chromaticScripts) {
@@ -45,21 +46,66 @@ export const updatePackageJsonScript = async (configPath: string, meta: ProjectM
                 packageJson.scripts[name] = `${script} ${configFlag}`;
                 hasChanges = true;
             } else {
-                // Script has config file flag - display current and suggested values
-                // TODO: See if we can get the path to update successfully
-                const currentConfigPath = script.match(/--config-file\s+'([^']+)'/)?.[1];
-                displayMessage(
-                    dedent`Current script "${name}":
-                    ${chalk.yellow(script)}
-                    
-                    Suggested config file flag:
-                    ${chalk.green(configFlag)}
-                    
-                    ${currentConfigPath !== relativeConfigPath ? 
-                        chalk.yellow('🚨 The config file paths are different. You may want to update your script.') : 
-                        chalk.green('✅ The config file paths match.')}`,
-                    { title: '📝 Script Details', borderColor: 'blue' }
-                );
+                // Script has config file flag - check if it needs updating
+                const currentConfigPath = script.match(/--config-file\s+['"]?([^'"\s]+)['"]?/)?.[1];
+                if (currentConfigPath !== relativeConfigPath) {
+                    needsUpdate = true;
+                    displayMessage(
+                        dedent`Current script "${name}":
+                        ${chalk.yellow(script)}
+                        
+                        Suggested config file flag:
+                        ${chalk.green(configFlag)}
+                        
+                        ${chalk.yellow('🚨 The config file paths are different.')}`,
+                        { title: '📝 Script Details', borderColor: 'blue' }
+                    );
+                } else {
+                    displayMessage(
+                        dedent`Current script "${name}":
+                        ${chalk.green(script)}
+                        
+                        ${chalk.green('✅ The config file paths match.')}
+                        
+                        🚨 Using GitHub Actions? Update your Chromatic step to include:
+                        configFile: '${relativeConfigPath}'`,
+                        { title: '📝 Script Details', borderColor: 'blue' }
+                    );
+                }
+            }
+        }
+
+        // If scripts need updating, ask the user
+        if (needsUpdate) {
+            try {
+                const { updateExistingScripts } = await prompt({
+                    type: 'confirm',
+                    name: 'updateExistingScripts',
+                    message: 'Would you like to update the existing scripts with the new config file path? (your other Chromatic options will be retained)',
+                    initial: false,
+                });
+
+                if (updateExistingScripts) {
+                    // Update scripts that have different config paths
+                    for (const [name, script] of chromaticScripts) {
+                        if (typeof script !== 'string') continue;
+                        
+                        const hasConfigFlag = script.includes('--config-file');
+                        if (hasConfigFlag) {
+                            const currentConfigPath = script.match(/--config-file\s+['"]?([^'"\s]+)['"]?/)?.[1];
+                            if (currentConfigPath !== relativeConfigPath) {
+                                // Replace the existing config flag with the new one
+                                packageJson.scripts[name] = script.replace(
+                                    /--config-file\s+['"]?[^'"\s]+['"]?/,
+                                    configFlag
+                                );
+                                hasChanges = true;
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                // Fallback: don't update if prompt fails
             }
         }
 
@@ -74,7 +120,7 @@ export const updatePackageJsonScript = async (configPath: string, meta: ProjectM
         const { addScript } = await prompt({
             type: 'confirm',
             name: 'addScript',
-            message: 'Would you like to add a Chromatic script to package.json?',
+            message: 'It looks like your project doesn\'t have a Chromatic script. Would you like to add one to your package.json?',
             initial: true,
         });
 

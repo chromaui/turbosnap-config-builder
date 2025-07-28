@@ -3,9 +3,7 @@
  * This utility helps users set up and manage Chromatic configuration files,
  * detect static assets, and update package.json scripts.
  */
-import { JsPackageManager, JsPackageManagerFactory } from 'storybook/internal/common';
-import { findConfigFile } from 'storybook/internal/common';
-import { readConfig } from 'storybook/internal/csf-tools';
+import { JsPackageManagerFactory, findConfigFile, readConfig } from './storybook-resolver';
 import { glob } from 'fast-glob';
 import { prompt } from 'prompts';
 import boxen from 'boxen';
@@ -50,7 +48,7 @@ const initMode = async () => {
         borderColor: 'magenta',
     });
 
-    const manager = JsPackageManagerFactory.getPackageManager() as JsPackageManager;
+    const manager = JsPackageManagerFactory.getPackageManager() as any;
 
     const storybookDirs = await glob('**/.storybook', {
         onlyDirectories: true,
@@ -314,7 +312,10 @@ const initMode = async () => {
                 `Updated package.json with Chromatic script using config file: ${path.relative(
                     process.cwd(),
                     finalConfig.path,
-                )}`,
+                )}
+
+🚨 Using GitHub Actions? Update your Chromatic step to include:
+configFile: '${path.relative(process.cwd(), finalConfig.path)}'`,
                 { title: '📝 Package.json Updated', borderColor: 'green' },
             );
         }
@@ -362,6 +363,32 @@ const initMode = async () => {
     }
 };
 
+const helpMode = async () => {
+    displayMessage(`
+Usage:
+    npx @chromatic-com/turbosnap-helper [command]
+
+Description:
+    This tool helps you configure Chromatic Turbosnap for your Storybook project.
+
+Commands: 
+    init, -i, --init (default)      Initialize or update Chromatic configuration
+    analyze, -a, --analyze          Analyze project for potential issues
+    preview, -p, --preview          Analyze preview files for potential issues
+    help, -h, --help                Show this help message
+
+Examples:
+    npx @chromatic-com/turbosnap-helper
+    npx @chromatic-com/turbosnap-helper analyze
+    npx @chromatic-com/turbosnap-helper --preview
+    npx @chromatic-com/turbosnap-helper -h
+    `, {
+        title: '❓ Help Mode',
+        borderColor: 'yellow',
+    });
+    process.exit(0);
+};
+
 /**
  * Main function that handles mode selection and execution
  */
@@ -371,13 +398,24 @@ const main = async () => {
 
     switch (mode) {
         case 'init':
+        case '-i':
+        case '--init':
             await initMode();
             break;
         case 'analyze':
+        case '-a':
+        case '--analyze':
             await analyzeMode();
             break;
         case 'preview':
+        case '-p':
+        case '--preview':
             await previewMode();
+            break;
+        case 'help':
+        case '-h':
+        case '--help':
+            await helpMode();
             break;
         default:
             displayMessage(`Unknown mode: ${mode}. Available modes: init (default), analyze, preview`, {

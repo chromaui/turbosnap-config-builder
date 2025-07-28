@@ -32,7 +32,7 @@ export const findChromaticConfig = async (storybookDir: string): Promise<{ path:
     }
 
     // If no default config found, search for other config files
-    const configFiles = await glob('**/*.config.{js,json}', {
+    const configFiles = await glob('**/*.config.json', {
         ignore: ['**/node_modules/**'],
         cwd: storybookDir
     });

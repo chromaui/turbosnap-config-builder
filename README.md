@@ -4,7 +4,7 @@ TurboSnap Helper is a CLI utility that assists with properly configuring TurboSn
 
 Start by running the utility in the root of your _repository_. The utility will help you locate projects for individual configuration.
 
-![turbosnap-helper init demo](assets/turbosnap-helper-init.gif)
+![turbosnap-helper init demo](https://raw.githubusercontent.com/chromaui/turbosnap-config-builder/assets/turbosnap-helper-init.gif)
 
 Why run from the root of your repository and not the root of your project?
 **Monorepos!**
@@ -17,11 +17,12 @@ By running from the root of your repository, the utility can detect multiple pro
 npx @chromatic-com/turbosnap-helper
 ```
 
-The utility has three modes:
+The utility has four commands, with three modes available to help you configure TurboSnap:
 
--   `init` (default)
--   `analyze`
--   `preview`
+-   `init`, `-i`, `--init` (default)
+-   `analyze`, `-a`, `--analyze`
+-   `preview`, `-p`, `--preview`
+-   `help`, `-h`, `--help`
 
 ### `init` mode (config helper)
 

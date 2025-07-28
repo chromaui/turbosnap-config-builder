@@ -1,5 +1,3 @@
-import { PackageManagerName } from 'storybook/internal/common';
-import { ConfigFile } from 'storybook/internal/csf-tools';
 import boxen from 'boxen';
 import chalk from 'chalk';
 import dedent from 'dedent';
@@ -8,14 +6,14 @@ import { ProjectMeta } from './types';
 /**
  * Normalizes package manager name to standard format
  */
-export const normalizeManagerName = (managerName: PackageManagerName) =>
+export const normalizeManagerName = (managerName: any) =>
     managerName.startsWith('yarn') ? 'yarn' : managerName;
 
 /**
  * Extracts framework information from Storybook main config
  * Updated to include getAbsolutePathMatch regex
  */
-export const pluckFrameworkFromRawContents = (mainConfig: ConfigFile): string => {
+export const pluckFrameworkFromRawContents = (mainConfig: any): string => {
     const frameworkNode = mainConfig.getFieldNode(['framework']);
     const { start, end } = frameworkNode;
     const frameworkContents = mainConfig._code.slice(start, end);

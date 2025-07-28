@@ -1,5 +1,3 @@
-import { JsPackageManager } from 'storybook/internal/common';
-import { ConfigFile } from 'storybook/internal/csf-tools';
 import { glob } from 'fast-glob';
 import { prompt } from 'prompts';
 import { ProjectMeta } from './types';
@@ -53,8 +51,8 @@ export const getStorybookConfigPath = async (): Promise<string> => {
  * Builds project metadata from Storybook configuration
  */
 export const buildProjectMeta = async (
-    packageManager: JsPackageManager,
-    mainConfig: ConfigFile,
+    packageManager: any,
+    mainConfig: any,
     configDir: string,
     ciEnv: string,
 ): Promise<ProjectMeta> => {
