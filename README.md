@@ -42,7 +42,7 @@ After a project is selected, you'll be asked whether you'd like to see your conf
 -   search your project's `package.json` for a Chromatic script
     -   if none exists, it'll ask if you'd like one created that has your config file path listed
     -   if one already exists and doesn't have the config file option, it'll ask if you'd like to add it
-    -   if it already exists and there's a mismatch in the paths (ex. `chromatic --config-file 'chromatic.config.json'` in the script but the file is saved to `configs/chromatic.config.json`), the CLI will display this and prompt you to consider updating the script
+    -   if it already exists and there's a mismatch in the paths (ex. `chromatic --config-file 'chromatic.config.json'` in the script but the file is saved to `configs/chromatic.config.json`), it'll ask if you'd like it updated while retaining any other options in your Chromatic script
 
 ### `analyze` mode (analyze imports for files)
 
@@ -63,4 +63,4 @@ Running the `preview` mode will:
 
 No one wants to wash all the dishes if they only used one cup, right? By keeping an efficient preview file, you'll help ensure you're only retesting when actual changes have impacted your stories.
 
-![turbosnap-helper preview and analyze demo](assets/turbosnap-helper-analyze-preview.gif)
+![turbosnap-helper preview and analyze demo](https://raw.githubusercontent.com/chromaui/turbosnap-config-builder/assets/turbosnap-helper-analyze-preview.gif)
