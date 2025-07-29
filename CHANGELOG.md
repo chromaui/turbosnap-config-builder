@@ -1,3 +1,16 @@
+# v0.4.2 (Tue Jul 29 2025)
+
+#### 🐛 Bug Fix
+
+- update the storybook utilities to use Storybook 9 [#6](https://github.com/chromaui/turbosnap-config-builder/pull/6) ([@ethriel3695](https://github.com/ethriel3695) [@repomadness](https://github.com/repomadness))
+
+#### Authors: 2
+
+- Reuben Ellis ([@ethriel3695](https://github.com/ethriel3695))
+- Sukaina ([@repomadness](https://github.com/repomadness))
+
+---
+
 # v0.3.1 (Fri Apr 25 2025)
 
 #### 🐛 Bug Fix
