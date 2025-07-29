@@ -26,9 +26,6 @@
     },
     "license": "ISC",
     "dependencies": {
-        "@storybook/cli": "^7.6.17",
-        "@storybook/core-common": "^7.6.17",
-        "@storybook/csf-tools": "^7.6.17",
         "@types/glob": "^8.1.0",
         "auto": "^11.0.5",
         "glob": "^11.0.1",
@@ -48,6 +45,7 @@
         "prettier": "^3.0.2",
         "prompts": "^2.4.2",
         "read-pkg-up": "^10.0.0",
+        "storybook": "^9.0.18",
         "tsup": "^8.0.2",
         "typescript": "^5.3.3"
     },

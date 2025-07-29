@@ -171,7 +171,7 @@ export const previewMode = async () => {
             ${results.map(result => {
                 const monorepoWarning = result.isMonorepo
                     ? boxen(
-                        dedent`🚨 Monorepo detected - be vareful with shared imports in preview files
+                        dedent`🚨 Monorepo detected - be careful with shared imports in preview files
 
 📦 Why this matters:
 In a monorepo, preview files often pull in shared packages (like @org/theme, @org/ui, etc.).
