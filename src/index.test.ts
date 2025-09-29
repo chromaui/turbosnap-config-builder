@@ -353,6 +353,140 @@ describe('index', () => {
     });
   });
 
+  describe('configAction show', () => {
+    it('should display all metadata when configAction is show', async () => {
+      process.argv = ['node', 'index.js', 'init'];
+
+      // Mock dependencies
+      const { glob } = await import('fast-glob');
+      const { prompt } = await import('prompts');
+      const { buildProjectMeta } = await import('./project-detection');
+      const mockConsoleLog = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+      const mockGlob = vi.mocked(glob);
+      const mockPrompt = vi.mocked(prompt);
+      const mockBuildProjectMeta = vi.mocked(buildProjectMeta);
+
+      // Setup mock data
+      const mockMeta = {
+        storybookBaseDir: './packages/ui',
+        storybookConfigDir: './packages/ui/.storybook',
+        storybookBuildDir: './packages/ui/storybook-static',
+        packageManager: 'yarn',
+        framework: '@storybook/react-vite',
+        isMonoRepo: true,
+        ciEnv: 'github',
+        staticAssets: []
+      };
+
+      // Mock the flow: find Storybook, select project, build meta, show config
+      mockGlob.mockResolvedValue(['packages/ui/.storybook']);
+      mockPrompt
+        .mockResolvedValueOnce({ selectedProject: 'packages/ui/.storybook' }) // Project selection
+        .mockResolvedValueOnce({ configAction: 'show' }); // Config action selection
+
+      mockBuildProjectMeta.mockResolvedValue(mockMeta);
+
+      // Import and execute main
+      try {
+        const indexModule = await import('./index');
+        await indexModule.main();
+        expect.fail('Should have thrown process exit error');
+      } catch (error) {
+        expect(error.message).toContain('process.exit called with code: 0');
+      }
+
+      // Verify that all expected metadata is displayed in console output
+      const logCalls = mockConsoleLog.mock.calls;
+      const allOutput = logCalls.flat().join(' ');
+
+      // Check that all the required metadata fields are present
+      expect(allOutput).toContain('Base Directory:');
+      expect(allOutput).toContain('./packages/ui');
+
+      expect(allOutput).toContain('Config Directory:');
+      expect(allOutput).toContain('./packages/ui/.storybook');
+
+      expect(allOutput).toContain('Build Directory:');
+      expect(allOutput).toContain('./packages/ui/storybook-static');
+
+      expect(allOutput).toContain('Package Manager:');
+      expect(allOutput).toContain('yarn');
+
+      expect(allOutput).toContain('Framework:');
+      expect(allOutput).toContain('@storybook/react-vite');
+
+      // Verify the show configuration message structure
+      expect(allOutput).toContain('Here are the recommended configuration values for your project:');
+      expect(allOutput).toContain('You can use these values in your Chromatic config file.');
+
+      // Ensure the prompt for configAction was called with correct choices including 'show'
+      expect(mockPrompt).toHaveBeenCalledWith({
+        type: 'select',
+        name: 'configAction',
+        message: 'What would you like to do with these configuration values?',
+        choices: expect.arrayContaining([
+          expect.objectContaining({
+            title: 'Just show me the configuration values',
+            value: 'show',
+            description: 'Display the configuration values without creating/updating files'
+          })
+        ])
+      });
+    });
+
+    it('should handle npm package manager and different framework in show mode', async () => {
+      process.argv = ['node', 'index.js'];
+
+      // Mock dependencies
+      const { glob } = await import('fast-glob');
+      const { prompt } = await import('prompts');
+      const { buildProjectMeta } = await import('./project-detection');
+      const mockConsoleLog = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+      const mockGlob = vi.mocked(glob);
+      const mockPrompt = vi.mocked(prompt);
+      const mockBuildProjectMeta = vi.mocked(buildProjectMeta);
+
+      // Setup mock data with different values
+      const mockMeta = {
+        storybookBaseDir: './storybook',
+        storybookConfigDir: './.storybook',
+        storybookBuildDir: './storybook-static',
+        packageManager: 'npm',
+        framework: '@storybook/nextjs',
+        isMonoRepo: false,
+        ciEnv: 'github',
+        staticAssets: []
+      };
+
+      mockGlob.mockResolvedValue(['.storybook']);
+      mockPrompt
+        .mockResolvedValueOnce({ selectedProject: '.storybook' })
+        .mockResolvedValueOnce({ configAction: 'show' });
+
+      mockBuildProjectMeta.mockResolvedValue(mockMeta);
+
+      try {
+        const indexModule = await import('./index');
+        await indexModule.main();
+        expect.fail('Should have thrown process exit error');
+      } catch (error) {
+        expect(error.message).toContain('process.exit called with code: 0');
+      }
+
+      const logCalls = mockConsoleLog.mock.calls;
+      const allOutput = logCalls.flat().join(' ');
+
+      // Verify different values are properly displayed
+      expect(allOutput).toContain('./storybook');
+      expect(allOutput).toContain('./.storybook');
+      expect(allOutput).toContain('./storybook-static');
+      expect(allOutput).toContain('npm');
+      expect(allOutput).toContain('@storybook/nextjs');
+    });
+  });
+
   describe('module exports', () => {
     it('should export main function', async () => {
       const indexModule = await import('./index');

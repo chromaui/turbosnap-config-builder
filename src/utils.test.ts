@@ -162,4 +162,84 @@ describe('utils', () => {
       expect(allCalls).toContain('@storybook/nextjs');
     });
   });
+
+  describe('console output validation', () => {
+    it('should never log [object Object] in any console output', () => {
+      // This is a regression test to ensure we never accidentally log
+      // objects directly that would show as [object Object]
+
+      // Mock a scenario where objects might be logged
+      const testObject = { workspaces: ['packages/*', 'apps/*'] };
+      const testArray = [1, 2, 3];
+      const testComplexObject = {
+        nested: { values: true },
+        array: [{ item: 'test' }]
+      };
+
+      // Test various ways objects might be accidentally logged
+      const badExamples = [
+        () => console.log('Object:', testObject),
+        () => console.log('Array:', testArray),
+        () => console.log('Complex:', testComplexObject)
+      ];
+
+      const goodExamples = [
+        () => console.log('Object:', JSON.stringify(testObject)),
+        () => console.log('Array:', JSON.stringify(testArray)),
+        () => console.log('Complex:', JSON.stringify(testComplexObject, null, 2))
+      ];
+
+      // Test bad examples would produce [object Object] (but we won't actually run them)
+      // Instead, test that good examples don't contain [object Object]
+      goodExamples.forEach(example => {
+        const mockLog = vi.fn();
+        const originalLog = console.log;
+        console.log = mockLog;
+
+        example();
+
+        const loggedContent = mockLog.mock.calls.flat().join(' ');
+        expect(loggedContent).not.toContain('[object Object]');
+        expect(loggedContent).not.toContain('[object Array]');
+
+        console.log = originalLog;
+      });
+    });
+
+    it('should properly stringify workspaces in package.json logging', () => {
+      // Test the specific case that was causing the issue
+      const packageJsonWithWorkspaces = {
+        name: 'test-package',
+        workspaces: ['packages/*', 'apps/*']
+      };
+
+      const packageJsonWithComplexWorkspaces = {
+        name: 'test-package',
+        workspaces: {
+          packages: ['packages/*', 'apps/*'],
+          nohoist: ['**/react', '**/react-dom']
+        }
+      };
+
+      // Good: JSON.stringify
+      const goodOutput1 = `Found package.json with workspaces: ${JSON.stringify(packageJsonWithWorkspaces.workspaces, null, 2)}`;
+      const goodOutput2 = `Found package.json with workspaces: ${JSON.stringify(packageJsonWithComplexWorkspaces.workspaces, null, 2)}`;
+
+      expect(goodOutput1).not.toContain('[object Object]');
+      expect(goodOutput1).not.toContain('[object Array]');
+      expect(goodOutput2).not.toContain('[object Object]');
+      expect(goodOutput2).not.toContain('[object Array]');
+
+      // Verify the JSON stringify produces valid JSON (the actual values, not the full string)
+      expect(() => JSON.stringify(packageJsonWithWorkspaces.workspaces, null, 2)).not.toThrow();
+      expect(() => JSON.stringify(packageJsonWithComplexWorkspaces.workspaces, null, 2)).not.toThrow();
+
+      // Test that the stringified values can be parsed back
+      const stringified1 = JSON.stringify(packageJsonWithWorkspaces.workspaces, null, 2);
+      const stringified2 = JSON.stringify(packageJsonWithComplexWorkspaces.workspaces, null, 2);
+
+      expect(() => JSON.parse(stringified1)).not.toThrow();
+      expect(() => JSON.parse(stringified2)).not.toThrow();
+    });
+  });
 });

@@ -63,7 +63,7 @@ const analyzePreviewFile = async (filePath: string, initialRootDir: string): Pro
         if (fs.existsSync(packageJsonPath)) {
             try {
                 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
-                console.log(`Found package.json with workspaces:`, packageJson.workspaces);
+                console.log(`Found package.json with workspaces:`, JSON.stringify(packageJson.workspaces, null, 2));
                 return packageJson.workspaces !== undefined;
             } catch (error) {
                 console.error(`Error reading package.json at ${packageJsonPath}:`, error);

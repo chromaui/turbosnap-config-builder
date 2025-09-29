@@ -421,6 +421,97 @@ describe('preview-mode', () => {
       expect(mockProcessExit).toHaveBeenCalledWith(0);
     });
 
+    it('should properly serialize workspaces object in console output', async () => {
+      const { glob } = await import('fast-glob');
+      const { prompt } = await import('prompts');
+
+      const mockPreviewContent = `import { ThemeProvider } from '@company/design-system';`;
+
+      // Test with array workspaces
+      const mockPackageJsonWithArrayWorkspaces = {
+        workspaces: ['packages/*', 'apps/*']
+      };
+
+      vi.mocked(glob)
+        .mockResolvedValueOnce(['packages/ui/.storybook'])
+        .mockResolvedValueOnce(['preview.ts']);
+
+      vi.mocked(prompt).mockResolvedValue({ selectedProject: 'packages/ui/.storybook' });
+
+      mockFs.readFileSync
+        .mockReturnValueOnce(mockPreviewContent)
+        .mockReturnValueOnce(JSON.stringify(mockPackageJsonWithArrayWorkspaces));
+
+      mockFs.existsSync.mockReturnValue(true);
+
+      await expect(previewMode()).rejects.toThrow(/process\.exit unexpectedly called/);
+
+      // Ensure workspaces are logged as JSON, not [object Object]
+      const logCalls = mockConsoleLog.mock.calls.flat();
+      const workspacesLogCall = logCalls.find(call =>
+        typeof call === 'string' && call.includes('Found package.json with workspaces:')
+      );
+
+      expect(workspacesLogCall).toBeDefined();
+      expect(workspacesLogCall).not.toContain('[object Object]');
+      expect(workspacesLogCall).not.toContain('[object Array]');
+
+      // Should contain properly formatted JSON
+      const jsonMatch = workspacesLogCall?.match(/Found package\.json with workspaces:\s*(.+)/);
+      if (jsonMatch) {
+        expect(() => JSON.parse(jsonMatch[1])).not.toThrow();
+        const parsedWorkspaces = JSON.parse(jsonMatch[1]);
+        expect(parsedWorkspaces).toEqual(['packages/*', 'apps/*']);
+      }
+    });
+
+    it('should properly serialize workspaces object format in console output', async () => {
+      const { glob } = await import('fast-glob');
+      const { prompt } = await import('prompts');
+
+      const mockPreviewContent = `import { ThemeProvider } from '@company/design-system';`;
+
+      // Test with object workspaces format
+      const mockPackageJsonWithObjectWorkspaces = {
+        workspaces: {
+          packages: ['packages/*', 'apps/*'],
+          nohoist: ['**/react', '**/react-dom']
+        }
+      };
+
+      vi.mocked(glob)
+        .mockResolvedValueOnce(['packages/ui/.storybook'])
+        .mockResolvedValueOnce(['preview.ts']);
+
+      vi.mocked(prompt).mockResolvedValue({ selectedProject: 'packages/ui/.storybook' });
+
+      mockFs.readFileSync
+        .mockReturnValueOnce(mockPreviewContent)
+        .mockReturnValueOnce(JSON.stringify(mockPackageJsonWithObjectWorkspaces));
+
+      mockFs.existsSync.mockReturnValue(true);
+
+      await expect(previewMode()).rejects.toThrow(/process\.exit unexpectedly called/);
+
+      // Ensure workspaces are logged as JSON, not [object Object]
+      const logCalls = mockConsoleLog.mock.calls.flat();
+      const workspacesLogCall = logCalls.find(call =>
+        typeof call === 'string' && call.includes('Found package.json with workspaces:')
+      );
+
+      expect(workspacesLogCall).toBeDefined();
+      expect(workspacesLogCall).not.toContain('[object Object]');
+
+      // Should contain properly formatted JSON
+      const jsonMatch = workspacesLogCall?.match(/Found package\.json with workspaces:\s*(.+)/);
+      if (jsonMatch) {
+        expect(() => JSON.parse(jsonMatch[1])).not.toThrow();
+        const parsedWorkspaces = JSON.parse(jsonMatch[1]);
+        expect(parsedWorkspaces).toHaveProperty('packages');
+        expect(parsedWorkspaces).toHaveProperty('nohoist');
+      }
+    });
+
     it('should correctly identify shared wrapper keywords', async () => {
       const { glob } = await import('fast-glob');
       const { prompt } = await import('prompts');
