@@ -8,7 +8,7 @@
     "main": "bin/index.js",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/chromaui/turbosnap-helper.git"
+        "url": "git+https://github.com/chromaui/turbosnap-config-builder.git"
     },
     "bin": {
         "turbosnap-helper": "bin/index.js"
