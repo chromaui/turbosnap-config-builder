@@ -196,7 +196,7 @@ TurboSnap to fallback and rebuild all stories.
                             padding: 1,
                             borderColor: 'yellow',
                             borderStyle: 'doubleSingle',
-                            margin: { top: 1, bottom: 1 }
+                            margin: { top: 1, right: 0, bottom: 1, left: 0 }
                         }
                     )
                     : '';
@@ -228,14 +228,14 @@ will cause all stories to be retested, even when most aren't affected.
                             padding: 1,
                             borderColor: 'red',
                             borderStyle: 'doubleSingle',
-                            margin: { top: 1, bottom: 1 }
+                            margin: { top: 1, right: 0, bottom: 1, left: 0 }
                         }
                     )
                     : boxen('✅ Import count is within acceptable range', {
                         padding: 1,
                         borderColor: 'green',
                         borderStyle: 'doubleSingle',
-                        margin: { top: 1, bottom: 1 }
+                        margin: { top: 1, right: 0, bottom: 1, left: 0 }
                     });
                 
                 const wrapperWarning = result.hasSharedWrappers
@@ -262,14 +262,14 @@ a full rebuild of all stories — even those that are unrelated.
                             padding: 1,
                             borderColor: 'yellow',
                             borderStyle: 'doubleSingle',
-                            margin: { top: 1, bottom: 1 }
+                            margin: { top: 1, right: 0, bottom: 1, left: 0 }
                         }
                     )
                     : boxen('✅ No shared wrappers/themes detected', {
                         padding: 1,
                         borderColor: 'green',
                         borderStyle: 'doubleSingle',
-                        margin: { top: 1, bottom: 1 }
+                        margin: { top: 1, right: 0, bottom: 1, left: 0 }
                     });
 
                 const importTypeWarning = result.dynamicImports.length > 0
@@ -296,14 +296,14 @@ Dynamic imports (import() or require() with variables or conditions):
                             padding: 1,
                             borderColor: 'magenta',
                             borderStyle: 'doubleSingle',
-                            margin: { top: 1, bottom: 1 }
+                            margin: { top: 1, right: 0, bottom: 1, left: 0 }
                         }
                     )
                     : boxen('✅ All imports are static', {
                         padding: 1,
                         borderColor: 'green',
                         borderStyle: 'doubleSingle',
-                        margin: { top: 1, bottom: 1 }
+                        margin: { top: 1, right: 0, bottom: 1, left: 0 }
                     });
                 
                 return `${chalk.cyan(result.file)}:
