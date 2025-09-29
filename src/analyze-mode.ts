@@ -22,29 +22,43 @@ const analyzeStoryFile = async (filePath: string): Promise<{
     // Get imports from analyzeFile
     const { staticImports, dynamicImports } = await analyzeFile(filePath);
 
-    // Hack to try to find the component file using the meta.component property
-    const componentMatch = content.match(/component:\s*([^,}\n]+)/);
+    // Try to find the component file using the meta.component property
+    // Skip inline components (arrow functions, function expressions)
+    const componentMatch = content.match(/component:\s*([a-zA-Z_$][a-zA-Z0-9_$]*)/);
     if (componentMatch) {
         const componentName = componentMatch[1].trim();
+        // Escape the component name for safe regex usage
+        const escapedComponentName = componentName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         // Find the import statement for this component
-        const componentImportMatch = content.match(new RegExp(`import\\s+{[^}]*\\b${componentName}\\b[^}]*}\\s+from\\s+['"]([^'"]+)['"]`));
-        
+        const componentImportMatch = content.match(new RegExp(`import\\s+{[^}]*\\b${escapedComponentName}\\b[^}]*}\\s+from\\s+['"]([^'"]+)['"]`));
+
         if (componentImportMatch) {
             const importPath = componentImportMatch[1];
             const storyDir = path.dirname(filePath);
-            const possibleComponentPaths = [
-                path.join(storyDir, `${importPath}.{js,jsx,ts,tsx}`),
-                path.join(storyDir, `${importPath}/index.{js,jsx,ts,tsx}`),
-            ];
 
-            for (const pattern of possibleComponentPaths) {
-                const matches = await glob(pattern, { 
-                    ignore: ['**/node_modules/**'],
-                    cwd: process.cwd()
-                });
-                if (matches.length > 0) {
-                    componentFile = matches[0];
-                    break;
+            // Build proper file extension patterns
+            const extensions = ['js', 'jsx', 'ts', 'tsx'];
+            const possibleComponentPaths = [];
+
+            // Direct file with extension
+            for (const ext of extensions) {
+                possibleComponentPaths.push(path.join(storyDir, `${importPath}.${ext}`));
+            }
+
+            // Index file in directory
+            for (const ext of extensions) {
+                possibleComponentPaths.push(path.join(storyDir, importPath, `index.${ext}`));
+            }
+
+            for (const componentPath of possibleComponentPaths) {
+                try {
+                    if (fs.existsSync(componentPath)) {
+                        componentFile = componentPath;
+                        break;
+                    }
+                } catch (error) {
+                    // Continue to next possible path if this one fails
+                    continue;
                 }
             }
         }
@@ -100,7 +114,7 @@ export const analyzeMode = async () => {
     console.log('Found Storybook directories:', storybookDirs);
 
     // If no Storybook config found, try to find story files directly
-    if (storybookDirs.length === 0) {
+    if (!storybookDirs || storybookDirs.length === 0) {
         console.log('No Storybook directories found, looking for story files directly...');
         const storyFiles = await glob('**/*.stories.{js,jsx,ts,tsx}', {
             ignore: ['**/node_modules/**'],
@@ -109,10 +123,10 @@ export const analyzeMode = async () => {
 
         console.log('Found story files:', storyFiles);
 
-        if (storyFiles.length > 0) {
+        if (storyFiles && storyFiles.length > 0) {
             displayMessage(
                 `Found ${chalk.cyan(storyFiles.length)} story ${storyFiles.length === 1 ? 'file' : 'files'} directly.`,
-                { title: '📚 Story Files', borderColor: 'magenta', titleAlignment: 'center' }
+                { title: '📚 Story Files', borderColor: 'magenta' }
             );
 
             // Analyze each story file
@@ -175,7 +189,7 @@ export const analyzeMode = async () => {
 
     console.log('Found story files in project:', projectStoryFiles);
 
-    if (projectStoryFiles.length === 0) {
+    if (!projectStoryFiles || projectStoryFiles.length === 0) {
         displayMessage(
             'No story files found in the selected project.',
             { title: '❌ No Stories Found', borderColor: 'yellow' }
