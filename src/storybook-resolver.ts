@@ -15,7 +15,8 @@ let readConfig: any;
 let PackageManagerName: any;
 let ConfigFile: any;
 
-const resolveStorybookModules = () => {
+// Export a function that can be called to test the resolution logic
+export const resolveStorybookModules = () => {
     // Try multiple resolution strategies for monorepo support
     const resolutionPaths = [
         process.cwd(), // Current working directory
@@ -89,8 +90,10 @@ const resolveStorybookModules = () => {
     }
 };
 
-// Initialize the modules
-if (!resolveStorybookModules()) {
+// Initialize the modules only in production (not during testing)
+// Tests can call resolveStorybookModules() manually to control the behavior
+const shouldInitialize = !process.env.NODE_ENV || process.env.NODE_ENV !== 'test';
+if (shouldInitialize && !resolveStorybookModules()) {
     console.error('Error: Could not find Storybook modules. Please ensure you are running this tool within a Storybook project.');
     process.exit(1);
 }
