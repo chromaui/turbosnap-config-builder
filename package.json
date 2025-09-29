@@ -17,6 +17,9 @@
         "build": "tsup",
         "build:watch": "tsup --watch",
         "clean": "rimraf bin",
+        "test": "vitest",
+        "test:run": "vitest run",
+        "test:coverage": "vitest run --coverage",
         "release": "pnpm build && auto shipit"
     },
     "keywords": [],
@@ -36,7 +39,7 @@
         "@types/boxen": "^3.0.5",
         "@types/dedent": "^0.7.0",
         "@types/minimatch": "^5.1.2",
-        "@types/node": "16",
+        "@types/node": "^18.0.0",
         "@types/prompts": "^2.4.4",
         "boxen": "^5.1.2",
         "chalk": "^5.3.0",
@@ -47,7 +50,8 @@
         "read-pkg-up": "^10.0.0",
         "storybook": "^9.0.18",
         "tsup": "^8.0.2",
-        "typescript": "^5.3.3"
+        "typescript": "^5.3.3",
+        "vitest": "^1.6.0"
     },
     "files": [
         "bin/**/*",
