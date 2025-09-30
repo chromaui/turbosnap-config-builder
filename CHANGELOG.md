@@ -1,3 +1,15 @@
+# v0.5.0 (Tue Sep 30 2025)
+
+#### 🚀 Enhancement
+
+- Minor: Fix CLI Execution and Module Improvements [#9](https://github.com/chromaui/turbosnap-config-builder/pull/9) ([@repomadness](https://github.com/repomadness))
+
+#### Authors: 1
+
+- Sukaina ([@repomadness](https://github.com/repomadness))
+
+---
+
 # v0.4.2 (Tue Jul 29 2025)
 
 #### 🐛 Bug Fix
