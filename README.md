@@ -4,7 +4,7 @@ TurboSnap Helper is a CLI utility that assists with properly configuring TurboSn
 
 Start by running the utility in the root of your _repository_. The utility will help you locate projects for individual configuration.
 
-![turbosnap-helper init demo](https://raw.githubusercontent.com/chromaui/turbosnap-config-builder/assets/turbosnap-helper-init.gif)
+![turbosnap-helper init demo](https://raw.githubusercontent.com/chromaui/turbosnap-config-builder/main/assets/turbosnap-helper-init.gif)
 
 Why run from the root of your repository and not the root of your project?
 **Monorepos!**
@@ -63,4 +63,4 @@ Running the `preview` mode will:
 
 No one wants to wash all the dishes if they only used one cup, right? By keeping an efficient preview file, you'll help ensure you're only retesting when actual changes have impacted your stories.
 
-![turbosnap-helper preview and analyze demo](https://raw.githubusercontent.com/chromaui/turbosnap-config-builder/assets/turbosnap-helper-analyze-preview.gif)
+![turbosnap-helper preview and analyze demo](https://raw.githubusercontent.com/chromaui/turbosnap-config-builder/main/assets/turbosnap-helper-analyze-preview.gif)

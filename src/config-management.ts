@@ -18,16 +18,31 @@ export interface ConfigResult {
  * Finds existing Chromatic configuration files
  */
 export const findChromaticConfig = async (storybookDir: string): Promise<{ path: string; config: ChromaticConfig } | null> => {
-    // First check for chromatic.config.json in the Storybook directory
-    const defaultConfigPath = path.join(storybookDir, 'chromatic.config.json');
-    if (fs.existsSync(defaultConfigPath)) {
+    // Check for chromatic.config.json in priority order: project root first, then Storybook directory
+    const projectRootConfigPath = path.join(process.cwd(), 'chromatic.config.json');
+    const storybookConfigPath = path.join(storybookDir, 'chromatic.config.json');
+
+    // First check project root
+    if (fs.existsSync(projectRootConfigPath)) {
         displayMessage(
-            `Found default config file: ${chalk.cyan(path.relative(process.cwd(), defaultConfigPath))}`,
+            `Found default config file: ${chalk.cyan(path.relative(process.cwd(), projectRootConfigPath))}`,
             { title: '📝 Config File Found', borderColor: 'green' }
         );
         return {
-            path: defaultConfigPath,
-            config: JSON.parse(fs.readFileSync(defaultConfigPath, 'utf-8'))
+            path: projectRootConfigPath,
+            config: JSON.parse(fs.readFileSync(projectRootConfigPath, 'utf-8'))
+        };
+    }
+
+    // Then check Storybook directory
+    if (fs.existsSync(storybookConfigPath)) {
+        displayMessage(
+            `Found default config file: ${chalk.cyan(path.relative(process.cwd(), storybookConfigPath))}`,
+            { title: '📝 Config File Found', borderColor: 'green' }
+        );
+        return {
+            path: storybookConfigPath,
+            config: JSON.parse(fs.readFileSync(storybookConfigPath, 'utf-8'))
         };
     }
 

@@ -31,7 +31,7 @@ const configState: ConfigState = {};
 /**
  * Handles exit with confirmation for unsaved changes
  */
-const handleExit = async (): Promise<void> => {
+export const handleExit = async (): Promise<void> => {
     displayMessage('Configuration helper exited.', {
         title: '👋 Goodbye!',
         borderColor: 'blue',
@@ -392,7 +392,7 @@ Examples:
 /**
  * Main function that handles mode selection and execution
  */
-const main = async () => {
+export const main = async () => {
     // Get the mode from command line arguments
     const mode = process.argv[2] || 'init';
 
@@ -431,12 +431,14 @@ process.on('SIGINT', async () => {
     await handleExit();
 });
 
-// Execute the main function
-main()
-    .then(() => {
-        process.exit(0);
-    })
-    .catch((e) => {
-        console.error(e);
-        process.exit(1);
-    });
+// Execute the main function only if this file is run directly
+if (require.main === module) {
+    main()
+        .then(() => {
+            process.exit(0);
+        })
+        .catch((e) => {
+            console.error(e);
+            process.exit(1);
+        });
+}

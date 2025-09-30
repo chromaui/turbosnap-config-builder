@@ -11,6 +11,10 @@ export default defineConfig((options) => [
         target: 'node16',
         clean: true,
         platform: 'node',
+        // Adding to avoid shell execution errors
+        banner: {
+            js: '#!/usr/bin/env node',
+        },
         // Adding these as external dependencies to avoid bundling them in the output
         external: [
             'storybook/internal/common',
